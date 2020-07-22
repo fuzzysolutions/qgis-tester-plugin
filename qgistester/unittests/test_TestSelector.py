@@ -14,12 +14,7 @@ try:
 except ImportError:
     import unittest.mock as mock
 import utilities
-try:
-    from qgis.PyQt.QtCore import Qt
-    isPyQt4 = True
-except ImportError:
-    from PyQt5.QtCore import Qt
-    isPyQt4 = False
+from qgis.PyQt.QtCore import Qt
 from qgistesting import start_app, stop_app
 from qgistesting.mocked import get_iface
 from qgistester.unittests.data.plugin1 import unitTests
@@ -63,16 +58,10 @@ class TestSelectorTests(unittest.TestCase):
             self.assertTrue(ts.testsTree.topLevelItem(0).child(1).checkState(0) == Qt.Checked)
             self.assertTrue(ts.testsTree.topLevelItem(0).child(2).checkState(0) == Qt.Checked)
             self.assertFalse(ts.testsTree.topLevelItem(0).isExpanded())
-            if isPyQt4:
-                self.assertTrue(ts.selectAllLabel.receivers(SIGNAL('linkActivated(const QString &)')) == 1)
-                self.assertTrue(ts.unselectAllLabel.receivers(SIGNAL('linkActivated(const QString &)')) == 1)
-                self.assertTrue(ts.buttonBox.receivers(SIGNAL('accepted()')) == 1)
-                self.assertTrue(ts.buttonBox.receivers(SIGNAL('rejected()')) == 1)
-            else:
-                self.assertTrue(ts.selectAllLabel.receivers(ts.selectAllLabel.linkActivated) == 1)
-                self.assertTrue(ts.unselectAllLabel.receivers(ts.unselectAllLabel.linkActivated) == 1)
-                self.assertTrue(ts.buttonBox.receivers(ts.buttonBox.accepted) == 1)
-                self.assertTrue(ts.buttonBox.receivers(ts.buttonBox.rejected) == 1)
+            self.assertTrue(ts.selectAllLabel.receivers(ts.selectAllLabel.linkActivated) == 1)
+            self.assertTrue(ts.unselectAllLabel.receivers(ts.unselectAllLabel.linkActivated) == 1)
+            self.assertTrue(ts.buttonBox.receivers(ts.buttonBox.accepted) == 1)
+            self.assertTrue(ts.buttonBox.receivers(ts.buttonBox.rejected) == 1)
 
     def testCheckTests(self):
         """check if all tests are checked/unchecked dependin on previous

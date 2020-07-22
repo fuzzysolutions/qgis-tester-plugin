@@ -16,14 +16,8 @@ except ImportError:
     import unittest.mock as mock
 from qgistesting import start_app
 from qgistesting.mocked import get_iface
-try:
-    from qgis.PyQt.QtWidgets import QMenu, QAction
-    from qgis.PyQt.QtCore import Qt, QPoint
-    isPyQt4 = True
-except ImportError:
-    from PyQt5.QtWidgets import QMenu, QAction
-    from PyQt5.QtCore import Qt, QPoint
-    isPyQt4 = False
+from qgis.PyQt.QtWidgets import QMenu, QAction
+from qgis.PyQt.QtCore import Qt, QPoint
 
 from qgistester.reportdialog import ReportDialog
 from qgistester.report import Report, TestResult
@@ -68,14 +62,9 @@ class ReportDialogTests(unittest.TestCase):
         expectedColorList = [Qt.green, Qt.red, Qt.gray]
         self.assertTrue(dlg.resultColor == expectedColorList)
         self.assertTrue(dlg.resultsTree.topLevelItemCount() == 0)
-        if isPyQt4:
-            self.assertTrue(dlg.resultsTree.receivers(SIGNAL('itemClicked(QTreeWidgetItem *, int)')) == 1)
-            self.assertTrue(dlg.resultsTree.receivers(SIGNAL('customContextMenuRequested(const QPoint &)')) == 1)
-            self.assertTrue(dlg.buttonBox.receivers(SIGNAL('rejected()')) == 1)
-        else:
-            self.assertTrue(dlg.resultsTree.receivers(dlg.resultsTree.itemClicked) == 1)
-            self.assertTrue(dlg.resultsTree.receivers(dlg.resultsTree.customContextMenuRequested) == 1)
-            self.assertTrue(dlg.buttonBox.receivers(dlg.buttonBox.rejected) == 1)
+        self.assertTrue(dlg.resultsTree.receivers(dlg.resultsTree.itemClicked) == 1)
+        self.assertTrue(dlg.resultsTree.receivers(dlg.resultsTree.customContextMenuRequested) == 1)
+        self.assertTrue(dlg.buttonBox.receivers(dlg.buttonBox.rejected) == 1)
 
         # test2
         # preconditions: populate with tests results
@@ -109,14 +98,9 @@ class ReportDialogTests(unittest.TestCase):
         point = QPoint(0, 0)
         qmenuMock = mock.Mock(spec=QMenu)
         qactionMock = mock.Mock(spec=QAction)
-        if isPyQt4:
-            with mock.patch('PyQt4.QtGui.QMenu', qmenuMock):
-                with mock.patch('PyQt4.QtGui.QAction', qactionMock):
-                    dlg.showPopupMenu(point)
-        else:
-            with mock.patch('PyQt5.QtWidgets.QMenu', qmenuMock):
-                with mock.patch('PyQt5.QtWidgets.QAction', qactionMock):
-                    dlg.showPopupMenu(point)
+        with mock.patch('PyQt5.QtWidgets.QMenu', qmenuMock):
+            with mock.patch('PyQt5.QtWidgets.QAction', qactionMock):
+                dlg.showPopupMenu(point)
 
         self.assertTrue(qmenuMock.mock_calls == [])
         self.assertTrue(qactionMock.mock_calls == [])
@@ -139,12 +123,8 @@ class ReportDialogTests(unittest.TestCase):
                 dlg.showPopupMenu(point)
         self.assertIn('call()', str(qmenuMock.mock_calls[0]))
         self.assertIn('call().addAction', str(qmenuMock.mock_calls[1]))
-        if isPyQt4:
-            self.assertIn('call().exec_(PyQt4.QtCore.QPoint())',
-                          str(qmenuMock.mock_calls[2]))
-        else:
-            self.assertIn('call().exec_(PyQt5.QtCore.QPoint())',
-                          str(qmenuMock.mock_calls[2]))
+        self.assertIn('call().exec_(PyQt5.QtCore.QPoint())',
+                      str(qmenuMock.mock_calls[2]))
 
         self.assertIn("call('Open issue page', None)",
                       str(qactionMock.mock_calls[0]))

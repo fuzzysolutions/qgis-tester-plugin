@@ -21,13 +21,7 @@ from qgistesting.mocked import get_iface
 import qgistester
 from qgistester.plugin import TesterPlugin
 from qgistester.test import Test
-try:
-    from qgis.PyQt.QtWidgets import QWidget, QAction, QMessageBox
-
-    isPyQt4 = True
-except ImportError:
-    from PyQt5.QtWidgets import QWidget, QAction, QMessageBox
-    isPyQt4 = False
+from qgis.PyQt.QtWidgets import QWidget, QAction, QMessageBox
 
 __author__ = 'Luigi Pirelli'
 __date__ = 'April 2016'
@@ -86,12 +80,8 @@ class TesterTests(unittest.TestCase):
         # do test 1) widget is None
         self.IFACE_Mock.reset_mock()
         testerPlugin.unload()
-        if isPyQt4:
-            self.assertIn("call.removePluginMenu(u'Tester'",
-                          str(self.IFACE_Mock.mock_calls[-1]))
-        else:
-            self.assertIn("call.removePluginMenu('Tester'",
-                          str(self.IFACE_Mock.mock_calls[-1]))
+        self.assertIn("call.removePluginMenu('Tester'",
+                      str(self.IFACE_Mock.mock_calls[-1]))
 
         self.assertNotIn('action', testerPlugin.__dict__)
         self.assertIn('widget', testerPlugin.__dict__)
@@ -104,12 +94,8 @@ class TesterTests(unittest.TestCase):
         self.IFACE_Mock.reset_mock()
         testerPlugin.widget = mock.MagicMock(QWidget)
         testerPlugin.unload()
-        if isPyQt4:
-            self.assertIn("call.removePluginMenu(u'Tester'",
-                          str(self.IFACE_Mock.mock_calls[0]))
-        else:
-            self.assertIn("call.removePluginMenu('Tester'",
-                          str(self.IFACE_Mock.mock_calls[0]))
+        self.assertIn("call.removePluginMenu('Tester'",
+                      str(self.IFACE_Mock.mock_calls[0]))
 
         self.assertNotIn('action', testerPlugin.__dict__)
         self.assertNotIn('widget', testerPlugin.__dict__)
@@ -127,19 +113,11 @@ class TesterTests(unittest.TestCase):
         testerPlugin.initGui()
         self.assertIsNotNone(testerPlugin.action)
         self.assertTrue(isinstance(testerPlugin.action, QAction))
-        if isPyQt4:
-            self.assertTrue(testerPlugin.action.receivers(
-                            SIGNAL('triggered()')) == 1)
-        else:
-            self.assertTrue(testerPlugin.action.receivers(
-                            testerPlugin.action.triggered) == 1)
+        self.assertTrue(testerPlugin.action.receivers(
+                        testerPlugin.action.triggered) == 1)
 
-        if isPyQt4:
-            self.assertIn("call.addPluginToMenu(u'Tester'",
-                          str(testerPlugin.iface.mock_calls[-1]))
-        else:
-            self.assertIn("call.addPluginToMenu('Tester'",
-                          str(testerPlugin.iface.mock_calls[-1]))
+        self.assertIn("call.addPluginToMenu('Tester'",
+                      str(testerPlugin.iface.mock_calls[-1]))
 
 
     def testTest(self):
@@ -159,19 +137,13 @@ class TesterTests(unittest.TestCase):
         testerPlugin = TesterPlugin(self.IFACE_Mock)
         testerPlugin.widget = qwidget
         # do test1
-        # I only test that PyQt4.QtGui.QMessageBox.warning is called in
+        # I only test that QMessageBox.warning is called in
         # the above preconditions
         qmessageboxMock = mock.Mock(spec=QMessageBox.warning)
-        if isPyQt4:
-            with mock.patch('PyQt4.QtGui.QMessageBox.warning', qmessageboxMock):
-                testerPlugin.test()
-            self.assertEqual("Tester plugin", str(qmessageboxMock.call_args[0][1]))
-            self.assertEqual("A test cycle is currently being run", str(qmessageboxMock.call_args[0][2]))
-        else:
-            with mock.patch('PyQt5.QtWidgets.QMessageBox.warning', qmessageboxMock):
-                testerPlugin.test()
-            self.assertEqual("Tester plugin", str(qmessageboxMock.call_args[0][1]))
-            self.assertEqual("A test cycle is currently being run", str(qmessageboxMock.call_args[0][2]))
+        with mock.patch('PyQt5.QtWidgets.QMessageBox.warning', qmessageboxMock):
+            testerPlugin.test()
+        self.assertEqual("Tester plugin", str(qmessageboxMock.call_args[0][1]))
+        self.assertEqual("A test cycle is currently being run", str(qmessageboxMock.call_args[0][2]))
 
         # test 2.1)
         # preconditions: TestSelector constructor mock return a mock simulating
