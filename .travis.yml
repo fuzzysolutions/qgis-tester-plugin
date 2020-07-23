@@ -21,4 +21,8 @@ install:
 
 script:
   - docker exec -it qgis-testing-environment sh -c "cd /tests_directory && paver setup && paver package --tests"
-  - docker exec -it qgis-testing-environment sh -c "$PYTHON_EXECUTABLE /tests_directory/qgistester/unittests/run_all_tests.py"
+  - docker exec -it qgis-testing-environment sh -c "$PYTHON_EXECUTABLE /tests_directory/qgistester/unittests/test_plugin.py"
+  - docker exec -it qgis-testing-environment sh -c "$PYTHON_EXECUTABLE /tests_directory/qgistester/unittests/test_ReportDialog.py"
+  - docker exec -it qgis-testing-environment sh -c "$PYTHON_EXECUTABLE /tests_directory/qgistester/unittests/test_TesterWidget.py"
+  - docker exec -it qgis-testing-environment sh -c "$PYTHON_EXECUTABLE /tests_directory/qgistester/unittests/test_Test.py"
+  - docker exec -it qgis-testing-environment sh -c "$PYTHON_EXECUTABLE /tests_directory/qgistester/unittests/test_TestsModule.py"
