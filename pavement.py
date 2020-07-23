@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
+
 import os
+import json
+from collections import defaultdict
 import zipfile
 
 from paver.easy import *
 
-import json
-from collections import defaultdict
 
 options(
     plugin = Bunch(
@@ -35,6 +37,7 @@ options(
 
 )
 
+
 @task
 @cmdopts([
     ('clean', 'c', 'clean out dependencies first'),
@@ -53,6 +56,7 @@ def setup():
             'ext_libs' : ext_libs.abspath(),
             'dep' : req
         })
+
 
 @task
 def install(options):
@@ -79,6 +83,7 @@ def install(options):
             docs_dest.mkdir()
         if not docs_link.islink():
             docs.symlink(docs_link)
+
 
 @task
 def install_devtools():
@@ -197,6 +202,7 @@ def _make_zip(zipFile, options):
             relpath = os.path.relpath(root)
             zipFile.write(path(root) / f, path(relpath) / f)
         filter_excludes(root, dirs)
+
 
 def read_requirements():
     """Return a list of runtime and list of test requirements"""
