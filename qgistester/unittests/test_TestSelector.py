@@ -46,40 +46,55 @@ class TestSelectorTests(unittest.TestCase):
         """check if __init__ is correctly executed."""
         with mock.patch('qgistester.tests.tests', self.tests):
             ts = TestSelector()
-            self.assertTrue(ts.testsTree.topLevelItemCount() == 1)
-            self.assertTrue(ts.testsTree.topLevelItem(0).childCount() == 3)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(0).text(0) ==
-                            'Functional test')
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(1).text(0) ==
-                            'Test that fails')
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(2).text(0) ==
-                            'Test that passes')
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(0).checkState(0) == Qt.Checked)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(1).checkState(0) == Qt.Checked)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(2).checkState(0) == Qt.Checked)
-            self.assertFalse(ts.testsTree.topLevelItem(0).isExpanded())
-            self.assertTrue(ts.selectAllLabel.receivers(ts.selectAllLabel.linkActivated) == 1)
-            self.assertTrue(ts.unselectAllLabel.receivers(ts.unselectAllLabel.linkActivated) == 1)
-            self.assertTrue(ts.buttonBox.receivers(ts.buttonBox.accepted) == 1)
-            self.assertTrue(ts.buttonBox.receivers(ts.buttonBox.rejected) == 1)
+            self.assertEqual(ts.testsTree.topLevelItemCount(), 1)
+
+            # Tree in the test selector looks like
+            #
+            # Manual and semi-automated tests
+            # +-General
+            #   +-Functional test
+            # Fully automated tests
+            # +-General
+            #   +-Test that fails
+            #   +-Test that passes
+            rootItem = ts.testsTree.topLevelItem(0)
+            self.assertEqual(rootItem.childCount(), 2)
+            self.assertEqual(rootItem.child(0).text(0), 'Manual and semi-automated tests')
+            self.assertEqual(rootItem.child(0).child(0).text(0), 'General')
+            self.assertEqual(rootItem.child(0).child(0).child(0).text(0), 'Functional test')
+            self.assertEqual(rootItem.child(1).text(0), 'Fully automated tests')
+            self.assertEqual(rootItem.child(1).child(0).text(0), 'General')
+            self.assertEqual(rootItem.child(1).child(0).child(0).text(0), 'Test that fails')
+            self.assertEqual(rootItem.child(1).child(0).child(1).text(0), 'Test that passes')
+
+            self.assertEqual(rootItem.child(0).checkState(0), Qt.Unchecked)
+            self.assertEqual(rootItem.child(1).checkState(0), Qt.Unchecked)
+            self.assertTrue(rootItem.isExpanded())
+            self.assertFalse(rootItem.child(0).isExpanded())
+            self.assertFalse(rootItem.child(1).isExpanded())
+
+            self.assertEqual(ts.selectAllLabel.receivers(ts.selectAllLabel.linkActivated), 1)
+            self.assertEqual(ts.unselectAllLabel.receivers(ts.unselectAllLabel.linkActivated), 1)
+            self.assertEqual(ts.buttonBox.receivers(ts.buttonBox.accepted), 1)
+            self.assertEqual(ts.buttonBox.receivers(ts.buttonBox.rejected), 1)
 
     def testCheckTests(self):
         """check if all tests are checked/unchecked dependin on previous
         state."""
         with mock.patch('qgistester.tests.tests', self.tests):
             ts = TestSelector()
-            # test 1: state = False (better first False because default all
-            # items are checked)
-            ts.checkTests(False)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(0).checkState(0) == Qt.Unchecked)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(1).checkState(0) == Qt.Unchecked)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(2).checkState(0) == Qt.Unchecked)
-            # test 2: state = True
-            ts.checkTests(True)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(0).checkState(0) == Qt.Checked)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(1).checkState(0) == Qt.Checked)
-            self.assertTrue(ts.testsTree.topLevelItem(0).child(2).checkState(0) == Qt.Checked)
+            rootItem = ts.testsTree.topLevelItem(0)
+            self.assertTrue(rootItem.child(0).checkState(0) == Qt.Unchecked)
+            self.assertTrue(rootItem.child(1).checkState(0) == Qt.Unchecked)
 
+            ts.checkTests(lambda t: Qt.Checked)
+            self.assertTrue(rootItem.child(0).checkState(0) == Qt.Checked)
+            self.assertTrue(rootItem.child(1).checkState(0) == Qt.Checked)
+            self.assertTrue(rootItem.child(0).child(0).checkState(0) == Qt.Checked)
+            self.assertTrue(rootItem.child(0).child(0).child(0).checkState(0) == Qt.Checked)
+            self.assertTrue(rootItem.child(1).child(0).checkState(0) == Qt.Checked)
+            self.assertTrue(rootItem.child(1).child(0).child(0).checkState(0) == Qt.Checked)
+            self.assertTrue(rootItem.child(1).child(0).child(1).checkState(0) == Qt.Checked)
 
     def testCancelPressed(self):
         """check the widget is closed."""
@@ -94,33 +109,33 @@ class TestSelectorTests(unittest.TestCase):
     def testOkPressed(self):
         """check the list of checked tests ar added to test suite."""
         with mock.patch('qgistester.tests.tests', self.tests):
+            ts = TestSelector()
+            ts.show()  # dlg.resultsTree is a QTreeWidget
+            self.assertTrue(ts.isVisible())
+            ts.okPressed()
+            self.assertEqual(len(ts.tests), 0)
+            self.assertFalse(ts.isVisible())
+
             # do test 1: all selected
             ts = TestSelector()
             ts.show()  # dlg.resultsTree is a QTreeWidget
             self.assertTrue(ts.isVisible())
+            ts.checkTests(lambda t: Qt.Checked)
             ts.okPressed()
             self.assertEqual(ts.tests[0], self.tests[0])
             self.assertEqual(ts.tests[1], self.tests[1])
             self.assertEqual(ts.tests[2], self.tests[2])
             self.assertFalse(ts.isVisible())
+
             # do test 1: uncheck the middle test
             ts = TestSelector()
             ts.show()  # dlg.resultsTree is a QTreeWidget
             self.assertTrue(ts.isVisible())
-            ts.testsTree.topLevelItem(0).child(1).setCheckState(0, False)
+            ts.checkTests(lambda t: Qt.Checked)
+            ts.testsTree.topLevelItem(0).child(1).child(0).child(0).setCheckState(0, False)
             ts.okPressed()
             self.assertEqual(ts.tests[0], self.tests[0])
             self.assertEqual(ts.tests[1], self.tests[2])
-            self.assertFalse(ts.isVisible())
-            # do test 1: uncheck all
-            ts = TestSelector()
-            ts.show()  # dlg.resultsTree is a QTreeWidget
-            self.assertTrue(ts.isVisible())
-            ts.testsTree.topLevelItem(0).child(0).setCheckState(0, False)
-            ts.testsTree.topLevelItem(0).child(1).setCheckState(0, False)
-            ts.testsTree.topLevelItem(0).child(2).setCheckState(0, False)
-            ts.okPressed()
-            self.assertEqual(len(ts.tests), 0)
             self.assertFalse(ts.isVisible())
 
 

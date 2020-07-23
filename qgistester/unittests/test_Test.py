@@ -78,7 +78,8 @@ class TestTests(unittest.TestCase):
         self.assertEqual(len(t.steps), 0)
         self.assertEqual(t.name, name)
         self.assertEqual(t.group, '')
-        self.assertIn('<function <lambda> at ', str(t.cleanup))
+        print(str(t.cleanup))
+        self.assertIn('<lambda> at ', str(t.cleanup))
         self.assertIsNone(t.cleanup())
         self.assertIsNone(t.issueUrl)
 

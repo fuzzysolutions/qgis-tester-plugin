@@ -18,6 +18,7 @@ from qgistesting import start_app
 from qgistesting.mocked import get_iface
 from qgis.PyQt.QtWidgets import QMenu, QAction
 from qgis.PyQt.QtCore import Qt, QPoint
+from qgis.PyQt.QtGui import QColor
 
 from qgistester.reportdialog import ReportDialog
 from qgistester.report import Report, TestResult
@@ -59,7 +60,7 @@ class ReportDialogTests(unittest.TestCase):
         r = Report()  # => r.results is empty
         # do test
         dlg = ReportDialog(r)  # dlg.resultsTree is a QTreeWidget
-        expectedColorList = [Qt.green, Qt.red, Qt.gray]
+        expectedColorList = [Qt.green, Qt.red, Qt.gray, Qt.magenta, QColor(237, 189, 129)]
         self.assertTrue(dlg.resultColor == expectedColorList)
         self.assertTrue(dlg.resultsTree.topLevelItemCount() == 0)
         self.assertTrue(dlg.resultsTree.receivers(dlg.resultsTree.itemClicked) == 1)
