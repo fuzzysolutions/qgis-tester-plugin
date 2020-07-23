@@ -34,7 +34,7 @@ class StepTests(unittest.TestCase):
         if tests.tests is None:
             tests.tests = []
 
-        from .data import plugin1
+        from qgistester.unittests.data import plugin1
         addTestModule(plugin1, 'Plugin1')
         test_names = [utw.name for utw in tests.tests]
         self.assertIn('Test that fails', test_names)
