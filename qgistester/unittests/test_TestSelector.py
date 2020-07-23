@@ -25,7 +25,7 @@ class TestSelectorTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.QGIS_APP = start_app()
+        cls.QGIS_APP = start_app(cleanup=False)
         assert cls.QGIS_APP is not None
         cls.IFACE_Mock = get_iface()
         assert cls.IFACE_Mock is not None
