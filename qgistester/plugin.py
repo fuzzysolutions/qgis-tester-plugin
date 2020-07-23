@@ -6,20 +6,17 @@ from builtins import object
 #
 import os
 
-from qgis.PyQt.QtCore import Qt
-from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtCore import Qt, QUrl
+from qgis.PyQt.QtGui import QIcon, QDesktopServices
 from qgis.PyQt.QtWidgets import QAction, QMessageBox
+
+from qgis.core import QgsApplication
 
 from qgistester.testerwidget import TesterWidget
 from qgistester.testselector import TestSelector
 from qgistester.settingswindow import SettingsWindow
 from qgistester.tests import addTestModule
 from qgistester.manualtests import manualtests
-
-from qgiscommons2.gui import (addAboutMenu,
-                             removeAboutMenu,
-                             addHelpMenu,
-                             removeHelpMenu)
 
 pluginPath = os.path.dirname(__file__)
 
@@ -34,21 +31,6 @@ class TesterPlugin(object):
 
         addTestModule(manualtests, "Tester Plugin")
 
-    def hideWidget(self):
-        if self.widget:
-            self.widget.hide()
-
-    def unload(self):
-        self.iface.removePluginMenu("Tester", self.action)
-
-        removeHelpMenu("Tester")
-        removeAboutMenu("Tester")
-
-        del self.action
-        if self.widget:
-            self.widget.hide()
-            del self.widget
-
     def initGui(self):
         self.action = QAction(
             QIcon(os.path.join(pluginPath, "plugin.png")),
@@ -57,8 +39,30 @@ class TesterPlugin(object):
         self.action.triggered.connect(self.test)
         self.iface.addPluginToMenu("Tester", self.action)
 
-        addHelpMenu("Tester", self.iface.addPluginToMenu)
-        addAboutMenu("Tester", self.iface.addPluginToMenu)
+        self.actionHelp = QAction('Help', self.iface.mainWindow())
+        self.actionHelp.setIcon(QgsApplication.getThemeIcon('/mActionHelpContents.svg'))
+        self.actionHelp.setObjectName('testerHelp')
+        self.actionHelp.triggered.connect(self.openHelp)
+        self.iface.addPluginToMenu("Tester", self.actionHelp)
+
+        self.actionAbout = QAction('About…', self.iface.mainWindow())
+        self.actionAbout.setIcon(QIcon(os.path.join(pluginPath, "about.png")))
+        self.actionAbout.setObjectName('testerAbout')
+        self.actionAbout.triggered.connect(self.about)
+        self.iface.addPluginToMenu("Tester", self.actionAbout)
+
+    def unload(self):
+        self.iface.removePluginMenu("Tester", self.action)
+        self.iface.removePluginMenu("Tester", self.actionHelp)
+        self.iface.removePluginMenu("Tester", self.actionAbout)
+
+        if self.widget:
+            self.widget.hide()
+            del self.widget
+
+    def hideWidget(self):
+        if self.widget:
+            self.widget.hide()
 
     def test(self):
         if self.widget is not None and self.widget.isVisible():
@@ -93,3 +97,10 @@ class TesterPlugin(object):
         self.widget = None
         if reopen:
             self.test()
+
+    def openHelp(self):
+        url = QUrl('file://{}'.format(os.path.join(pluginPath, 'docs',  'html', 'index.html')))
+        QDesktopServices.openUrl(url)
+
+    def about(self):
+        pass

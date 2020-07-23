@@ -9,12 +9,12 @@ import sys
 import traceback
 
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import pyqtSignal, QCoreApplication, QTimer
+from qgis.PyQt.QtCore import pyqtSignal, Qt, QCoreApplication, QTimer
 from qgis.PyQt.QtWidgets import QApplication
+from qgis.utils import OverrideCursor
 
 from qgistester.report import Report, TestResult
 from qgistester.reportdialog import ReportDialog
-from qgiscommons2.gui import execute
 
 WIDGET, BASE = uic.loadUiType(
     os.path.join(os.path.dirname(__file__), 'testerwidget.ui'))
@@ -121,7 +121,9 @@ class TesterWidget(BASE, WIDGET):
                 self.webView.setEnabled(False)
                 QCoreApplication.processEvents()
                 try:
-                    execute(step.function)
+                    with OverrideCursor(Qt.WaitCursor):
+                        step.function()
+                    QCoreApplication.processEvents()
                     self.testPasses()
                 except Exception as e:
                     if isinstance(e, AssertionError):
@@ -137,7 +139,9 @@ class TesterWidget(BASE, WIDGET):
                 self.btnNextStep.setEnabled(False)
                 if step.prestep:
                     try:
-                        execute(step.prestep)
+                        with OverrideCursor(Qt.WaitCursor):
+                            step.prestep()
+                        QCoreApplication.processEvents()
                     except Exception as e:
                         if isinstance(e, AssertionError):
                             self.testFailsAtSetup("%s\n%s" % (str(e), traceback.format_exc()))
@@ -153,7 +157,9 @@ class TesterWidget(BASE, WIDGET):
                 self.webView.setEnabled(False)
                 QCoreApplication.processEvents()
                 try:
-                    execute(step.function)
+                    with OverrideCursor(Qt.WaitCursor):
+                        step.function()
+                    QCoreApplication.processEvents()
                     self.currentTestStep += 1
                     self.runNextStep()
                 except Exception as e:
@@ -175,7 +181,9 @@ class TesterWidget(BASE, WIDGET):
                     self.btnTestFailed.setEnabled(False)
                 if step.prestep:
                     try:
-                        execute(step.prestep)
+                        with OverrideCursor(Qt.WaitCursor):
+                            step.prestep()
+                        QCoreApplication.processEvents()
                     except Exception as e:
                         if isinstance(e, AssertionError):
                             self.testFailsAtSetup("%s\n%s" % (str(e), traceback.format_exc()))

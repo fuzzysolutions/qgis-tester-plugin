@@ -76,31 +76,17 @@ class TesterTests(unittest.TestCase):
         # preconditions
         testerPlugin = TesterPlugin(self.IFACE_Mock)
         action = QAction("Start testing", self.IFACE_Mock.mainWindow())
+        actionHelp = QAction("Help", self.IFACE_Mock.mainWindow())
+        actionAbout = QAction("About…", self.IFACE_Mock.mainWindow())
         testerPlugin.action = action
+        testerPlugin.actionHelp = actionHelp
+        testerPlugin.actionAbout = actionAbout
+        testerPlugin.widget = mock.MagicMock(QWidget)
         # do test 1) widget is None
         self.IFACE_Mock.reset_mock()
         testerPlugin.unload()
-        self.assertIn("call.removePluginMenu('Tester'",
-                      str(self.IFACE_Mock.mock_calls[-1]))
-
-        self.assertNotIn('action', testerPlugin.__dict__)
-        self.assertIn('widget', testerPlugin.__dict__)
-
-        # preconditions
-        testerPlugin = TesterPlugin(self.IFACE_Mock)
-        action = QAction("Start testing", self.IFACE_Mock.mainWindow())
-        testerPlugin.action = action
-        # do test 2) widget is available
-        self.IFACE_Mock.reset_mock()
-        testerPlugin.widget = mock.MagicMock(QWidget)
-        testerPlugin.unload()
-        self.assertIn("call.removePluginMenu('Tester'",
-                      str(self.IFACE_Mock.mock_calls[0]))
-
-        self.assertNotIn('action', testerPlugin.__dict__)
+        self.assertEqual(len(self.IFACE_Mock.mock_calls), 3)
         self.assertNotIn('widget', testerPlugin.__dict__)
-        # I can not check if widget.hide has been called due to delete of
-        # widget during unload
 
     def testInitGui(self):
         """Check that the plugin create the relative action and register
