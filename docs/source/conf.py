@@ -44,7 +44,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'QGIS Tester Plugin'
-copyright = u'2016 Boundless Spatial, Inc.'
+copyright = u'2020 QCooperative'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -98,12 +98,34 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'sphinx_rtd_theme'
 
-# Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-#html_theme_options = {}
+# https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html#theme-options
+# rtd / read the docs theme options:
+html_theme_options = {
+     # collapse_navigation: With this enabled, navigation entries are not expandable – the [+] icons next to each entry are removed. Default: True
+    'collapse_navigation': True,
+    # sticky_navigation: Scroll the navigation with the main page content as you scroll the page. Default: True
+    'sticky_navigation': True,
+    # navigation_depth: The maximum depth of the table of contents tree. Set this to -1 to allow unlimited depth. Default: 4
+    'navigation_depth': 4,
+    # includehidden:Specifies if the navigation includes hidden table(s) of contents – that is, any toctree directive that is marked with the :hidden: option. Default: True,
+    # 'includehidden': True,
+    # canonical_url: This will specify a canonical URL meta link element to tell search engines which URL should be ranked as the primary URL for your documentation. This is important if you have multiple URLs that your documentation is available through. The URL points to the root path of the documentation and requires a trailing slash.
+    # display_version: If True, the version number is shown at the top of the sidebar. Default: True,
+    'display_version': True,
+    # logo_only: Only display the logo image, do not display the project name at the top of the sidebar. Default: False,
+    'logo_only': False,
+    # prev_next_buttons_location': Location to display Next and Previous buttons. This can be either bottom, top, both , or None. Default: 'bottom',
+    'prev_next_buttons_location': 'both',
+    # style_external_links': Add an icon next to external links. Default: False,
+    'style_external_links': False,
+    # style_nav_header_background': Changes the background of the search area in the navigation bar. The value can be anything valid in a CSS background property. Default: 'white',
+    #'style_nav_header_background': 'Gray',
+    # Toc options
+    # titles_only: When enabled, page subheadings are not included in the navigation. Default: False
+    # 'titles_only': False,
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = ['../themes']
