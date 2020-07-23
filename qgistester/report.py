@@ -1,12 +1,11 @@
-from builtins import range
-from builtins import object
 # -*- coding: utf-8 -*-
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
 
-class Report(object):
+class Report:
 
     def __init__(self):
         self.results = []
@@ -15,7 +14,7 @@ class Report(object):
         self.results.append(result)
 
 
-class TestResult(object):
+class TestResult:
 
     PASSED, FAILED, SKIPPED, CONTAINS_ERROR, FAILED_AT_SETUP = list(range(5))
 
@@ -47,15 +46,15 @@ class TestResult(object):
         self.status = self.SKIPPED
 
     def __str__(self):
-        s = "Test name: %s-%s\nTest result:" % (self.test.group, self.test.name)
+        s = 'Test name: {}-{}\nTest result:'.format(self.test.group, self.test.name)
         if self.status == self.SKIPPED:
-            s+= "Test skipped"
+            s+= 'Test skipped'
         elif self.status == self.PASSED:
-            s+= "Test passed correctly"
+            s+= 'Test passed correctly'
         elif self.status == self.CONTAINS_ERROR:
-            s+= "Test contains an error at step '%s':\n%s" %(self.errorStep, self.errorMessage)
+            s+= 'Test contains an error at step "{}":\n{}'.format(self.errorStep, self.errorMessage)
         elif self.status == self.FAILED_AT_SETUP:
-            s+= "Test step '%s' failed at setup:\n%s" %(self.errorStep, self.errorMessage)
+            s+= 'Test step "{}" failed at setup:\n{}'.format(self.errorStep, self.errorMessage)
         else:
-            s+= "Test failed at step '%s' with message:\n%s" %(self.errorStep, self.errorMessage)
+            s+= 'Test failed at step "{}" with message:\n{}'.format(self.errorStep, self.errorMessage)
         return s

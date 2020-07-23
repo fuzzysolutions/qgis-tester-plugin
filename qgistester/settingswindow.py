@@ -1,5 +1,5 @@
-from builtins import range
 # -*- coding: utf-8 -*-
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
@@ -9,8 +9,7 @@ import os
 from qgis.PyQt import uic
 from qgis.PyQt.QtWidgets import QTableWidgetItem
 
-WIDGET, BASE = uic.loadUiType(
-    os.path.join(os.path.dirname(__file__), 'settingswindow.ui'))
+WIDGET, BASE = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'settingswindow.ui'))
 
 
 class SettingsWindow(BASE, WIDGET):

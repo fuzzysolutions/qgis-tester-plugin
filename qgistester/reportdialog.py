@@ -1,6 +1,5 @@
-from builtins import str
-from builtins import range
 # -*- coding: utf-8 -*-
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
@@ -24,8 +23,7 @@ from qgis.PyQt.QtWidgets import (QTreeWidgetItem,
 from qgis.PyQt.QtGui import QColor
 from qgis.core import QgsApplication
 
-WIDGET, BASE = uic.loadUiType(
-    os.path.join(os.path.dirname(__file__), 'reportdialog.ui'))
+WIDGET, BASE = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'reportdialog.ui'))
 
 
 class ReportDialog(BASE, WIDGET):
@@ -72,7 +70,7 @@ class ReportDialog(BASE, WIDGET):
         self.resultsTree.itemClicked.connect(self.itemClicked)
         self.resultsTree.customContextMenuRequested.connect(self.showPopupMenu)
 
-        button = QPushButton("Re-open test selector");
+        button = QPushButton('Re-open test selector');
         def _reopen():
             self.reopen = True
             self.close()
@@ -83,7 +81,7 @@ class ReportDialog(BASE, WIDGET):
         self.buttonBox.rejected.connect(self.close)
 
     def saveFailed(self, results):
-        allFailed = {} 
+        allFailed = {}
         allResults = defaultdict(list)
         for result in results:
             test = result.test
@@ -94,13 +92,12 @@ class ReportDialog(BASE, WIDGET):
                 if result.status in [1, 3, 4]:
                     failed.append(result.test.name)
             allFailed[group] = failed
-        folder = os.path.expanduser("~/.testerplugin")
+        folder = os.path.expanduser('~/.testerplugin')
         if not os.path.exists(folder):
             os.makedirs(folder)
-        filepath = os.path.join(folder, "failed.txt")
-        with open(filepath, "w") as f:
+        filepath = os.path.join(folder, 'failed.txt')
+        with open(filepath, 'w') as f:
             json.dump(allFailed, f)
-
 
     def showPopupMenu(self, point):
         item = self.resultsTree.selectedItems()[0]
@@ -124,20 +121,16 @@ class ReportDialog(BASE, WIDGET):
 
     def saveResults(self, saveAll=False):
         currentItem = self.resultsTree.currentItem()
-        if not saveAll and not hasattr(currentItem, "result"):
-            QMessageBox.warning(self, "Save results", "No test item selected")
+        if not saveAll and not hasattr(currentItem, 'result'):
+            QMessageBox.warning(self, 'Save results', 'No test item selected')
             return
 
         settings = QSettings('Boundless', 'qgistester')
         lastDirectory = settings.value('lastDirectory', '.')
-        fileName, __ = QFileDialog.getSaveFileName(self,
-                                               self.tr('Save file'),
-                                               lastDirectory,
-                                               self.tr('HTML files (*.html)'))
-
-        # Needed to handle different return values in Qt4 and Qt5
-        if isinstance(fileName, tuple):
-            fileName = fileName[0]
+        fileName, _ = QFileDialog.getSaveFileName(self,
+                                                  self.tr('Save file'),
+                                                  lastDirectory,
+                                                  self.tr('HTML files (*.html)'))
 
         if fileName == '':
             return
@@ -159,7 +152,7 @@ class ReportDialog(BASE, WIDGET):
                     results = groupItem.child(j).result
                     out += '<li>[{}] {}'.format(self.resultTag[results.status], results.test.name)
                     if results.status not in [results.SKIPPED, results.PASSED]:
-                        out += '<p>Failed at step {} with message</p>'.format(results.errorStep)
+                        out += '<p>Failed at step "{}" with message</p>'.format(results.errorStep)
                         out += '<code>{}</code>'.format(results.errorMessage)
                     out += '</li>'
                 out += '</ul>'
@@ -169,7 +162,7 @@ class ReportDialog(BASE, WIDGET):
             out += '<ul>'
             out += '<li>[{}] {}'.format(self.resultTag[results.status], results.test.name)
             if results.status not in [results.SKIPPED, results.PASSED]:
-                out += '<p>Failed at step {} with message</p>'.format(results.errorStep)
+                out += '<p>Failed at step "{}" with message</p>'.format(results.errorStep)
                 out += '<code>{}</code>'.format(results.errorMessage)
             out += '</li></ul>'
         out += '</body></html>'

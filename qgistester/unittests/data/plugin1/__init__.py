@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Test provide tests for plugin1"""
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
+
+"""Dummy plugin with tests which can be used by Tester plugin"""
+
+
 import unittest
 from qgistester.test import Test
 
 def functionalTests():
     test = Test('Functional test')
-    test.addStep('Step 1',
-                 prestep=lambda: True, isVerifyStep=True)
-    test.addStep('Step 1',
-                 prestep=lambda: True, isVerifyStep=True)
-    test.setIssueUrl("http://www.example.com")
+    test.addStep('Step 1', prestep=lambda: True, isVerifyStep=True)
+    test.addStep('Step 1', prestep=lambda: True, isVerifyStep=True)
+    test.setIssueUrl('http://www.example.com')
     return [test]
 
 

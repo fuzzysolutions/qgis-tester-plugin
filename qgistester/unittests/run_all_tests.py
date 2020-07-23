@@ -1,35 +1,28 @@
 # -*- coding: utf-8 -*-
-"""Run all unit tests."""
-from __future__ import absolute_import
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
-import utilities
-import unittest
-import sys
-from qgistester.unittests.test_plugin import suite as pluginTestsSuite
-from qgistester.unittests.test_report import suite as reportTestsSuite
-from qgistester.unittests.test_ReportDialog import suite as \
-                                           reportDialogTestsSuite
-from qgistester.unittests.test_Test import suite as testTestsSuite
-from qgistester.unittests.test_TesterWidget import suite as \
-                                           testerWidgetTestsSuite
-from qgistester.unittests.test_TestSelector import suite as \
-                                           selectorTestsSuite
-from qgistester.unittests.test_translations import suite as \
-                                           translationsTestsSuite
 
 __author__ = 'Luigi Pirelli'
 __date__ = 'April 2016'
 __copyright__ = '(C) 2016 Boundless, http://boundlessgeo.com'
 
-# Tests for the QGIS Tester plugin. To know more see
-# https://github.com/boundlessgeo/qgis-tester-plugin
+import sys
+import unittest
+
+import utilities
+from qgistester.unittests.test_Test import suite as testTestsSuite
+from qgistester.unittests.test_plugin import suite as pluginTestsSuite
+from qgistester.unittests.test_report import suite as reportTestsSuite
+from qgistester.unittests.test_ReportDialog import suite as reportDialogTestsSuite
+from qgistester.unittests.test_TesterWidget import suite as testerWidgetTestsSuite
+from qgistester.unittests.test_TestSelector import suite as selectorTestsSuite
+from qgistester.unittests.test_translations import suite as translationsTestsSuite
 
 
 def unitTests():
-    """return array of test suites."""
     _tests = []
     _tests.extend(pluginTestsSuite())
     _tests.extend(reportTestsSuite())
@@ -42,7 +35,6 @@ def unitTests():
 
 
 def runAllUnitTests():
-    """run all unittests."""
     _suite = unittest.TestSuite()
     _suite.addTest(pluginTestsSuite())
     _suite.addTest(reportTestsSuite())

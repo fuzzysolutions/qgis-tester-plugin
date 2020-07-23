@@ -1,3 +1,4 @@
-This folder contains test data for the Tester Plugin unit tests.
+This folder contains test data for the Tester plugin unit tests.
 
-Plugin1 is a fake plugin that contain tests for the the Tester Plugin
+Plugin1 is a fake plugin containing tests which can be executed by the
+Tester plugin.

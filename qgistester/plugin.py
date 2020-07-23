@@ -1,9 +1,10 @@
-from builtins import object
 # -*- coding: utf-8 -*-
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
+
 import os
 
 from qgis.PyQt.QtCore import Qt, QUrl
@@ -21,7 +22,7 @@ from qgistester.manualtests import manualtests
 pluginPath = os.path.dirname(__file__)
 
 
-class TesterPlugin(object):
+class TesterPlugin:
 
     def __init__(self, iface):
         self.iface = iface
@@ -29,32 +30,31 @@ class TesterPlugin(object):
         self.widget = None
         self.iface.initializationCompleted.connect(self.hideWidget)
 
-        addTestModule(manualtests, "Tester Plugin")
+        addTestModule(manualtests, 'Tester Plugin')
 
     def initGui(self):
-        self.action = QAction(
-            QIcon(os.path.join(pluginPath, "plugin.png")),
-            "Start testing",
-            self.iface.mainWindow())
+        self.action = QAction('Start testing', self.iface.mainWindow())
+        self.action.setIcon(QIcon(os.path.join(pluginPath, 'plugin.png')))
+        self.action.setObjectName('testerStart')
         self.action.triggered.connect(self.test)
-        self.iface.addPluginToMenu("Tester", self.action)
+        self.iface.addPluginToMenu('Tester', self.action)
 
         self.actionHelp = QAction('Help', self.iface.mainWindow())
         self.actionHelp.setIcon(QgsApplication.getThemeIcon('/mActionHelpContents.svg'))
         self.actionHelp.setObjectName('testerHelp')
         self.actionHelp.triggered.connect(self.openHelp)
-        self.iface.addPluginToMenu("Tester", self.actionHelp)
+        self.iface.addPluginToMenu('Tester', self.actionHelp)
 
         self.actionAbout = QAction('About…', self.iface.mainWindow())
-        self.actionAbout.setIcon(QIcon(os.path.join(pluginPath, "about.png")))
+        self.actionAbout.setIcon(QIcon(os.path.join(pluginPath, 'about.png')))
         self.actionAbout.setObjectName('testerAbout')
         self.actionAbout.triggered.connect(self.about)
-        self.iface.addPluginToMenu("Tester", self.actionAbout)
+        self.iface.addPluginToMenu('Tester', self.actionAbout)
 
     def unload(self):
-        self.iface.removePluginMenu("Tester", self.action)
-        self.iface.removePluginMenu("Tester", self.actionHelp)
-        self.iface.removePluginMenu("Tester", self.actionAbout)
+        self.iface.removePluginMenu('Tester', self.action)
+        self.iface.removePluginMenu('Tester', self.actionHelp)
+        self.iface.removePluginMenu('Tester', self.actionAbout)
 
         if self.widget:
             self.widget.hide()
@@ -66,8 +66,9 @@ class TesterPlugin(object):
 
     def test(self):
         if self.widget is not None and self.widget.isVisible():
-            QMessageBox.warning(self.iface.mainWindow(), "Tester plugin", "A test cycle is currently being run")
+            QMessageBox.warning(self.iface.mainWindow(), 'Tester plugin', 'A test cycle is currently being run')
             return
+
         dlg = TestSelector()
         dlg.exec_()
         if dlg.tests:

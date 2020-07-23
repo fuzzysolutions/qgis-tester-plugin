@@ -1,49 +1,40 @@
 # -*- coding: utf-8 -*-
-"""Test TestSelector.py."""
-from __future__ import absolute_import
-from builtins import map
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
-import unittest
-import sys
+
 import os
-try:
-    import mock
-except ImportError:
-    import unittest.mock as mock
-import utilities
+import sys
+import unittest
+import unittest.mock as mock
+
 from qgis.PyQt.QtCore import Qt
+
+import utilities
 from qgistesting import start_app, stop_app
 from qgistesting.mocked import get_iface
 from qgistester.unittests.data.plugin1 import unitTests
 from qgistester.tests import findTests
 from qgistester.testselector import TestSelector
 
+
 class TestSelectorTests(unittest.TestCase):
-    """Tests for the TestSelector widget that select the list of tests to
-    execute."""
+    """Tests for the TestSelector class"""
 
     @classmethod
     def setUpClass(cls):
-        """Test setUp method."""
-        utilities.setUpEnv()
         cls.QGIS_APP = start_app()
         assert cls.QGIS_APP is not None
         cls.IFACE_Mock = get_iface()
         assert cls.IFACE_Mock is not None
-        # get test data
+
         testPluginPath = os.path.abspath('data')
         cls.tests = findTests(path=[testPluginPath], prefix='')
 
-    @classmethod
-    def tearDownClass(cls):
-        """Test tearDown method."""
-        utilities.cleanUpEnv()
-
     def testInit(self):
-        """check if __init__ is correctly executed."""
+        """Check if __init__ is correctly executed"""
         with mock.patch('qgistester.tests.tests', self.tests):
             ts = TestSelector()
             self.assertEqual(ts.testsTree.topLevelItemCount(), 1)
@@ -79,8 +70,7 @@ class TestSelectorTests(unittest.TestCase):
             self.assertEqual(ts.buttonBox.receivers(ts.buttonBox.rejected), 1)
 
     def testCheckTests(self):
-        """check if all tests are checked/unchecked dependin on previous
-        state."""
+        """Check selecting/deselecting tests"""
         with mock.patch('qgistester.tests.tests', self.tests):
             ts = TestSelector()
             rootItem = ts.testsTree.topLevelItem(0)
@@ -97,28 +87,28 @@ class TestSelectorTests(unittest.TestCase):
             self.assertTrue(rootItem.child(1).child(0).child(1).checkState(0) == Qt.Checked)
 
     def testCancelPressed(self):
-        """check the widget is closed."""
+        """Check that the widget is closed"""
         with mock.patch('qgistester.tests.tests', self.tests):
             ts = TestSelector()
-            ts.show()  # dlg.resultsTree is a QTreeWidget
-            # do test
+            ts.show()
             self.assertTrue(ts.isVisible())
             ts.cancelPressed()
             self.assertFalse(ts.isVisible())
 
     def testOkPressed(self):
-        """check the list of checked tests ar added to test suite."""
+        """Check that selected tests are added to the suite"""
         with mock.patch('qgistester.tests.tests', self.tests):
             ts = TestSelector()
-            ts.show()  # dlg.resultsTree is a QTreeWidget
+            ts.show()
             self.assertTrue(ts.isVisible())
             ts.okPressed()
+            # no tests selected by default
             self.assertEqual(len(ts.tests), 0)
             self.assertFalse(ts.isVisible())
 
-            # do test 1: all selected
+            # select all tests
             ts = TestSelector()
-            ts.show()  # dlg.resultsTree is a QTreeWidget
+            ts.show()
             self.assertTrue(ts.isVisible())
             ts.checkTests(lambda t: Qt.Checked)
             ts.okPressed()
@@ -127,9 +117,9 @@ class TestSelectorTests(unittest.TestCase):
             self.assertEqual(ts.tests[2], self.tests[2])
             self.assertFalse(ts.isVisible())
 
-            # do test 1: uncheck the middle test
+            # select 2 tests out of 3 available
             ts = TestSelector()
-            ts.show()  # dlg.resultsTree is a QTreeWidget
+            ts.show()
             self.assertTrue(ts.isVisible())
             ts.checkTests(lambda t: Qt.Checked)
             ts.testsTree.topLevelItem(0).child(1).child(0).child(0).setCheckState(0, False)
@@ -139,31 +129,25 @@ class TestSelectorTests(unittest.TestCase):
             self.assertFalse(ts.isVisible())
 
 
-###############################################################################
-
 def suiteSubset():
-    """Setup a test suit for a subset of tests."""
     tests = ['testInit']
     suite = unittest.TestSuite(list(map(TestSelectorTests, tests)))
     return suite
 
 
 def suite():
-    """Return test suite for all tests."""
     suite = unittest.TestSuite()
     suite.addTests(unittest.makeSuite(TestSelectorTests, 'test'))
     return suite
 
 
 def run_all():
-    """run all tests using unittest => no nose or testplugin."""
-    # demo_test = unittest.TestLoader().loadTestsFromTestCase(CatalogTests)
     unittest.TextTestRunner(verbosity=3, stream=sys.stdout).run(suite())
 
 
 def run_subset():
-    """run a subset of tests using unittest > no nose or testplugin."""
     unittest.TextTestRunner(verbosity=3, stream=sys.stdout).run(suiteSubset())
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     run_all()

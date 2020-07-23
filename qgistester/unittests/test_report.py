@@ -1,83 +1,56 @@
 # -*- coding: utf-8 -*-
-"""unittests for Report.py."""
-from __future__ import absolute_import
-from builtins import map
-from builtins import str
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
-import unittest
-import sys
-try:
-    import mock
-except ImportError:
-    import unittest.mock as mock
-import utilities
-from qgistester.report import Report, TestResult
-from qgistester.test import Test, UnitTestWrapper
 
 __author__ = 'Alessandro Pasotti'
 __date__ = 'April 2016'
 __copyright__ = '(C) 2016 Boundless, http://boundlessgeo.com'
 
+import sys
+import unittest
+import unittest.mock as mock
+
+import utilities
+from qgistester.report import Report, TestResult
+from qgistester.test import Test, UnitTestWrapper
+
 
 class ReportTests(unittest.TestCase):
-    """Tests for the Report class that provides QGIS User interface to run
-    tests."""
-
-    @classmethod
-    def setUpClass(cls):
-        """Test setUp method."""
-        utilities.setUpEnv()
-
-    @classmethod
-    def tearDownClass(cls):
-        """Test tearDown method."""
-        utilities.cleanUpEnv()
+    """Tests for the Report class"""
 
     def testInit(self):
-        """check if __init__ is correctly executed."""
+        """Check if __init__ is correctly executed"""
         r = Report()
-        self.assertTrue(type(r.results) == list)
-        self.assertTrue(len(r.results) == 0)
+        self.assertIsInstance(r.results, list)
+        self.assertEqual(len(r.results), 0)
 
     def testAddTestResult(self):
-        """test if a test is added in the results array."""
+        """Test if a test is added to the results array"""
         r = Report()
         test = mock.Mock()
         tr = TestResult(test)
         r.addTestResult(tr)
         self.assertEqual(r.results[0], tr)
-        self.assertTrue(len(r.results) == 1)
+        self.assertEqual(len(r.results), 1)
 
 
 class TestResultTests(unittest.TestCase):
-    """Tests for the TestResult class that provides QGIS User interface to run
-    tests."""
-
-    @classmethod
-    def setUpClass(cls):
-        """Test setUp method."""
-        utilities.setUpEnv()
-
-    @classmethod
-    def tearDownClass(cls):
-        """Test tearDown method."""
-        utilities.cleanUpEnv()
+    """Tests for the TestResult class"""
 
     def testInit(self):
-        """check if __init__ is correctly executed."""
+        """Check if __init__ is correctly executed"""
         tr = TestResult('fake_test')
         self.assertEqual(tr.test, 'fake_test')
         self.assertEqual(tr.status, tr.SKIPPED)
         self.assertEqual(tr.errorStep, None)
         self.assertEqual(tr.errorMessage, None)
 
-
     def testFailed(self):
-        """check if the fail flag is correctly set."""
-        t = Test('Test that fail is set')
+        """Check if the fail flag is correctly set"""
+        t = Test('Test that has fails')
         t.addStep('Fail', lambda: False)
         tr = TestResult(t)
         tr.failed('fake_step', 'FAILED')
@@ -86,34 +59,31 @@ class TestResultTests(unittest.TestCase):
         self.assertEqual(tr.errorMessage, 'FAILED')
 
     def testPassed(self):
-        """check if the passed is correctly set."""
-        t = Test('Test that passed is set')
+        """Check if the passed flag is correctly set"""
+        t = Test('Test that passed')
         t.addStep('Passed', lambda: False)
         tr = TestResult(t)
         tr.passed()
         self.assertEqual(tr.status, tr.PASSED)
         self.assertIsNone(tr.errorStep)
-        self.assertIsNone(tr.errorMessage, 'PASSED')
-
+        self.assertIsNone(tr.errorMessage)
 
     def testSkipped(self):
-        """check if the skipped is correctly set."""
-        t = Test('Test that skipped is set')
+        """Check if the skipped flag is correctly set"""
+        t = Test('Test that was skipped')
         t.addStep('Skipped', lambda: False)
         tr = TestResult(t)
         tr.skipped()
         self.assertEqual(tr.status, tr.SKIPPED)
         self.assertIsNone(tr.errorStep)
-        self.assertIsNone(tr.errorMessage, 'PASSED')
-
+        self.assertIsNone(tr.errorMessage)
 
     def test__str___(self):
-        """test __str__  that convert a status in readamble string."""
-        t = Test('Test that skipped is set')
+        """Test __str__ method"""
+        t = Test('Test that was skipped')
         t.addStep('Skipped', lambda: False)
         tr = TestResult(t)
-        self.assertEqual(u"%s" % tr, 'Test name: -Test that skipped is set\nTest result:Test skipped')
-
+        self.assertEqual('{}'.format(tr), 'Test name: -Test that was skipped\nTest result:Test skipped')
 
 
 class TestRealRunner(unittest.TestCase):
@@ -133,16 +103,6 @@ class TestRealRunner(unittest.TestCase):
             result.failed(test, str(e))
         report.addTestResult(result)
         return report.results[0]
-
-    @classmethod
-    def setUpClass(cls):
-        """Test setUp method."""
-        utilities.setUpEnv()
-
-    @classmethod
-    def tearDownClass(cls):
-        """Test tearDown method."""
-        utilities.cleanUpEnv()
 
     def testPassed(self):
         """Tests if a passed test correctly set PASSED in TestResult"""
@@ -169,18 +129,13 @@ class TestRealRunner(unittest.TestCase):
         self.assertEqual(result.status, result.FAILED)
 
 
-
-###############################################################################
-
 def suiteSubset():
-    """Setup a test suit for a subset of tests."""
     tests = ['testInit']
     suite = unittest.TestSuite(list(map(ReportTests, tests)))
     return suite
 
 
 def suite():
-    """Return test suite for all tests."""
     suite = unittest.TestSuite()
     suite.addTests(unittest.makeSuite(ReportTests, 'test'))
     suite.addTests(unittest.makeSuite(TestResultTests, 'test'))
@@ -189,14 +144,12 @@ def suite():
 
 
 def run_all():
-    """run all tests using unittest => no nose or testplugin."""
-    # demo_test = unittest.TestLoader().loadTestsFromTestCase(CatalogTests)
     unittest.TextTestRunner(verbosity=3, stream=sys.stdout).run(suite())
 
 
 def run_subset():
-    """run a subset of tests using unittest > no nose or testplugin."""
     unittest.TextTestRunner(verbosity=3, stream=sys.stdout).run(suiteSubset())
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     run_all()

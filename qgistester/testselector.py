@@ -1,11 +1,9 @@
-from builtins import range
 # -*- coding: utf-8 -*-
+
 #
 # (c) 2016 Boundless, http://boundlessgeo.com
 # This code is licensed under the GPL 2.0 license.
 #
-
-from future.utils import iteritems
 
 import os
 import json
@@ -26,8 +24,7 @@ from qgis.gui import QgsMessageBar
 import qgistester.tests as tests
 from qgistester.test import UnitTestWrapper
 
-WIDGET, BASE = uic.loadUiType(
-    os.path.join(os.path.dirname(__file__), 'testselector.ui'))
+WIDGET, BASE = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'testselector.ui'))
 
 
 class TestSelector(BASE, WIDGET):
@@ -46,15 +43,15 @@ class TestSelector(BASE, WIDGET):
         for test in tests.tests:
             allTests[test.group].append(test)
 
-        for group, groupTests in iteritems(allTests):
+        for group, groupTests in allTests.items():
             groupItem = QTreeWidgetItem()
             groupItem.setText(0, group)
             groupItem.setFlags(groupItem.flags() | Qt.ItemIsTristate);
             unitItem = QTreeWidgetItem()
-            unitItem.setText(0, "Fully automated tests")
+            unitItem.setText(0, 'Fully automated tests')
             unitItem.setFlags(unitItem.flags() | Qt.ItemIsTristate);
             manualItem = QTreeWidgetItem()
-            manualItem.setText(0, "Manual and semi-automated tests")
+            manualItem.setText(0, 'Manual and semi-automated tests')
             manualItem.setFlags(manualItem.flags() | Qt.ItemIsTristate);
             unitTestsByCategories = defaultdict(list)
             manualTestsByCategories = defaultdict(list)
@@ -64,7 +61,7 @@ class TestSelector(BASE, WIDGET):
                 else:
                     manualTestsByCategories[test.category].append(test)
             for testsList, parentItem in [(unitTestsByCategories, unitItem), (manualTestsByCategories, manualItem)]:
-                for cat, catTests in iteritems(testsList):
+                for cat, catTests in testsList.items():
                     categoryItem = QTreeWidgetItem()
                     categoryItem.setText(0, cat)
                     categoryItem.setFlags(manualItem.flags() | Qt.ItemIsTristate);
@@ -83,39 +80,43 @@ class TestSelector(BASE, WIDGET):
             self.testsTree.addTopLevelItem(groupItem)
             groupItem.setExpanded(True)
 
-        self.buttonBox.button(QDialogButtonBox.Ok).setText("Run selected tests")
+        self.buttonBox.button(QDialogButtonBox.Ok).setText('Run selected tests')
         self.buttonBox.accepted.connect(self.okPressed)
         self.buttonBox.rejected.connect(self.cancelPressed)
 
         self.selectAllLabel.linkActivated.connect(lambda: self.checkTests(lambda t: Qt.Checked))
         self.unselectAllLabel.linkActivated.connect(lambda: self.checkTests(lambda t: Qt.Unchecked))
+
         def _onlyManual(t):
             if isinstance(t, UnitTestWrapper):
                 return Qt.Unchecked
             else:
                 return Qt.Checked
+
         self.onlyManualLabel.linkActivated.connect(lambda: self.checkTests(_onlyManual))
+
         def _onlyUnit(t):
             if isinstance(t, UnitTestWrapper):
                 return Qt.Checked
             else:
                 return Qt.Unchecked
+
         self.onlyUnitLabel.linkActivated.connect(lambda: self.checkTests(_onlyUnit))
 
-        filepath = os.path.expanduser("~/.testerplugin/failed.txt")
+        filepath = os.path.expanduser('~/.testerplugin/failed.txt')
         if os.path.exists(filepath):
             with open(filepath) as f:
                 failed = json.load(f)
         else:
             failed = []
+
         def _onlyLastFailures(t):
             if t.group in failed and t.name in failed[t.group]:
                 return Qt.Checked
             else:
                 return Qt.Unchecked
-        self.onlyLastFailuresLabel.linkActivated.connect(lambda: self.checkTests(_onlyLastFailures))
 
-        
+        self.onlyLastFailuresLabel.linkActivated.connect(lambda: self.checkTests(_onlyLastFailures))
 
         self.exportButton.clicked.connect(self.export)
 
@@ -124,16 +125,16 @@ class TestSelector(BASE, WIDGET):
         for test in tests.tests:
             allTests[test.group].append(test)
 
-        s = ""
+        s = ''
         for group, groupTests in allTests.items():
-            s += "- %s\n" % group
+            s += '- {}\n'.format(group)
             for t in groupTests:
-                s += "\t- %s\n" % t.name
+                s += '\t- {}\n'.format(t.name)
 
         cb = QApplication.clipboard()
         cb.clear(mode=cb.Clipboard )
         cb.setText(s, mode=cb.Clipboard)
-        self.bar.pushMessage("", "Tests list has been copied to your clipboard", level=Qgis.Success, duration=5)
+        self.bar.pushMessage('', 'Tests list has been copied to your clipboard', level=Qgis.Success, duration=5)
 
     def checkTests(self, condition):
         self.checkTest(self.testsTree.invisibleRootItem(), condition)
@@ -147,7 +148,7 @@ class TestSelector(BASE, WIDGET):
             try:
                 item.setCheckState(0, condition(item.test))
             except:
-                pass                
+                pass
 
     def cancelPressed(self):
         self.close()

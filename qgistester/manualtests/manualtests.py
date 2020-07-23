@@ -12,6 +12,7 @@ def functionalTests():
 
     def failingFunction():
         assert False
+
     failingTest = Test('This test should fail')
     failingTest.addStep("Failing step", function=failingFunction)
 
@@ -20,6 +21,7 @@ def functionalTests():
 
     def errorFunction():
         raise Exception ("Error in test")
+
     errorTest = Test('This test should error')
     errorTest.addStep("Error step", function=errorFunction)
 
