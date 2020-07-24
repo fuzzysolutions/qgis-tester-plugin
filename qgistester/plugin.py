@@ -34,7 +34,7 @@ class TesterPlugin:
 
     def initGui(self):
         self.action = QAction('Start testing', self.iface.mainWindow())
-        self.action.setIcon(QIcon(os.path.join(pluginPath, 'plugin.png')))
+        self.action.setIcon(QIcon(os.path.join(pluginPath, 'plugin.svg')))
         self.action.setObjectName('testerStart')
         self.action.triggered.connect(self.test)
         self.iface.addPluginToMenu('Tester', self.action)
@@ -46,7 +46,7 @@ class TesterPlugin:
         self.iface.addPluginToMenu('Tester', self.actionHelp)
 
         self.actionAbout = QAction('About…', self.iface.mainWindow())
-        self.actionAbout.setIcon(QIcon(os.path.join(pluginPath, 'about.png')))
+        self.actionAbout.setIcon(QIcon(os.path.join(pluginPath, 'about.svg')))
         self.actionAbout.setObjectName('testerAbout')
         self.actionAbout.triggered.connect(self.about)
         self.iface.addPluginToMenu('Tester', self.actionAbout)

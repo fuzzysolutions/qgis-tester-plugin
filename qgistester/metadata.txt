@@ -9,7 +9,7 @@ qgisMinimumVersion=3.0
 author=QCooperative, Victor Olaya (Boundless)
 email=info@qcooperative.net
 
-icon=plugin.png
+icon=plugin.svg
 
 tags=plugins,test
 
