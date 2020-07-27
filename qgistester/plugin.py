@@ -6,12 +6,13 @@
 #
 
 import os
+import configparser
 
 from qgis.PyQt.QtCore import Qt, QUrl
 from qgis.PyQt.QtGui import QIcon, QDesktopServices
 from qgis.PyQt.QtWidgets import QAction, QMessageBox
 
-from qgis.core import QgsApplication
+from qgis.core import QgsApplication, QgsMessageOutput
 
 from qgistester.testerwidget import TesterWidget
 from qgistester.testselector import TestSelector
@@ -104,4 +105,59 @@ class TesterPlugin:
         QDesktopServices.openUrl(url)
 
     def about(self):
-        pass
+        cfg = configparser.ConfigParser()
+        cfg.read(os.path.join(pluginPath, 'metadata.txt'))
+        info = cfg['general']
+
+        html = '<style>body, table {padding:0px; margin:0px; font-family:verdana; font-size: 1.1em;}</style>'
+        html += '<body>'
+        html += '<table cellspacing="4" width="100%"><tr><td>'
+        html += '<h1>{}</h1>'.format(info['name'])
+        html += '<h3>{}</h3>'.format(info['description'])
+        if info['about'] != '':
+            html += info['about'].replace('\n', '<br/>')
+        html += '<br/><br/>'
+
+        if info['category'] != '':
+            html += '{}: {} <br/>'.format('Category', info['category'])
+
+        if info['tags'] != '':
+            html += '{}: {} <br/>'.format('Tags', info['tags'])
+
+        if info['homepage'] != '' or info['tracker'] != '' or info['code_repository'] != '':
+            html += 'More info:'
+            if info['homepage'] != '':
+                html += '<a href="{}">{}</a> &nbsp;'.format(info['homepage'], 'Homepage')
+
+            if info['tracker'] != '':
+                html += '<a href="{}">{}</a> &nbsp;'.format(info['tracker'], 'Bug tracker')
+
+            if info['repository'] != '':
+                html += '<a href="{}">{}</a> &nbsp;'.format(info['repository'], 'Code repository')
+
+            html += '<br/>'
+
+        html += '<br/>'
+        if info['email'] != '':
+            html += '{}: <a href="mailto:{}">{}</a>'.format('Author', info['email'], info['author'])
+            html += '<br/><br/>'
+        elif info['author'] != '':
+            html += '{}: {}'.format('Author', info['author'])
+            html += '<br/><br/>'
+
+        if info['version'] != '':
+            html += 'Installed version: {}<br/>'.format(info['version'])
+
+        if 'changelog' in info and info['changelog'] != '':
+            html += '<br/>'
+            changelog = 'Changelog:<br/>{} <br/>'.format(info['changelog'])
+            html += changelog.replace('\n', '<br/>')
+
+        html += '</td></tr></table>'
+        html += '</body>'
+
+        dlg = QgsMessageOutput.createMessageOutput()
+        dlg.setTitle('Plugin info')
+        dlg.setMessage(html, QgsMessageOutput.MessageHtml)
+        dlg.showMessage()
+
