@@ -4,52 +4,65 @@
 Writing tests
 =============
 
-Instructions to write new tests are described in this document
+Tester plugin does not contain any test, they are distributed either as part of other plugins (to test this specific plugin) or as separate plugins containing only tests (for example, for QGIS core functionality) and nothing else.
 
-To write a new set of tests, add a python module file in the *tests* folder of the plugin. The module can have two functions, to define unit tests (automated) and functional tests (semi-automated):  *functionalTests()* and *unitTests()*. None of these functions is mandatory. The plugin will look for them and, if found, will call them to retrieve the tests declared by the module.
+To write a new set of tests, add a new python module file in the to the plugin, it can be inside plugin's root directory or in the separate folder, e.g. inside *tests* folder. The module can have two functions, to define unit tests (automated) and functional tests (semi-automated):  ``unitTests()`` and ``functionalTests()`` respectively. None of these functions is mandatory. The Tester plugin will look for them and, if found, will call them to retrieve the tests declared by the module.
 
-Plugins can add their tests suite to this tester plugin by using the addTestModule() function.
-
-In your plugin *__init__* method add something like this:
+Plugins should register their tests suite to the Tester plugin by using the ``addTestModule()`` function. To do this add following code in your plugin's ``__init__()`` method (don't forget to replace ``from plugin.tests import testmodule`` with correct import of the module with tests)
 
 ::
 
     try:
+        from plugin.tests import testmodule
         from qgistester.tests import addTestModule
-        addTestModule(testmodule, "Name_of_my_plugin")
+        addTestModule(testmodule, "Tests_category_or_name")
     except:
         pass
 
-Unit Tests
-***********
-
-Unit tests are created wrapping a python test suite. Create your test suite in the usual Python way and then return it from the *unitTests()* method.
-
-The test description shown in the test selector dialog is taken from the test's ``shortDescription()`` method, which takes the first line of the docstring, so if you want to add a name to your test, just add a one-line dosctring in it. If no docstring is present, the test method name is used.
-
-Functional Tests
-*****************
-
-Functional tests are defined using the *Test* class from the qgistester.test module. Here is an example of a test
+Also to correctly de-register plugin's tests from the Tester plugin add following code to the plugin's ``unload()`` method
 
 ::
 
-	vectorRenderingTest = Test("Verify rendering of uploaded style")
-	vectorRenderingTest.addStep("Preparing data", _openAndUpload)
-	vectorRenderingTest.addStep("Check that WMS layer is correctly rendered")
-	vectorRenderingTest.setCleanup(_clean)
+    try:
+        from plugin.tests import testmodule
+        from qgistester.tests import removeTestModule
+        removeTestModule(testmodule, 'Tests_category_or_name')
+    except:
+        pass
 
-To add a step to the test, the *addStep()* method is used. It accepts four parameters: ``description, function, prestep, isVerifyStep``.
 
-The first one is mandatory and is a string with the description of the test. The second one is optional and should be a function. If this parameters is passed, the function will be executed at that step, and it will be an automated step. If no function is passed, the step will be considered a manual one. The description will be shown to the user and he will perform the step manually.
+Unit Tests
+**********
 
-If once the manual step has been performed, the tester has to verify something, the ``isVerifyStep`` parameter should receive True. That will cause the "Step passes" and "Step fails" buttons to be active, instead of the simple "Next step" one.
+Unit tests are created by wrapping a Python test suite. Create your test suite in the usual Python way and then return it from the ``unitTests()`` method.
 
-If you require a prestep to be executed before actually entering this step, pass the corresponding function using the ``prestep`` parameters.
+The test description shown in the test selector dialog is taken from the test's ``shortDescription()`` method, which takes the first line of the docstring, so if you want to add a name to your test, just add a one-line dosctring to it. If no docstring is present, the test method name will be used.
 
-You can add a cleanup task to be performed when the test is finished (or skipped), by using the *setCleanup()* method and passing a function where the cleanup is to be performed.
+Functional Tests
+****************
 
-Issue URL
-*********
+Functional tests are defined using the *Test* class from the ``qgistester.test`` module. Here is an example of a functional test suite containing single test which in turn consists of two steps (one automated and one manual)
 
-You can define a issue URL for each test, using the ``Test.setIssueURL(url)`` method, in case you are using a testinbg platform to keep track of test executions.
+::
+
+    def functionalTests():
+	    vectorRenderingTest = Test("Verify rendering of uploaded style")
+	    vectorRenderingTest.addStep("Preparing data", _openAndUpload)
+	    vectorRenderingTest.addStep("Check that WMS layer is correctly rendered")
+	    vectorRenderingTest.setCleanup(_clean)
+
+        return [vectorRenderingTest]
+
+First we need to create a new instance of the ``Test`` class. Constructor accepts two parameters: name of the test and optional category (defaults to "General"). Then all required steps should be added to the test instance.
+
+To add a step to the test, the ``addStep(description, function=None, prestep=None, isVerifyStep=False)`` method is used. It accepts four parameters: *description*, *function*, *prestep*, *isVerifyStep*.
+
+The first one is mandatory and is a string with the description of the step. The second one is optional and should be a function. If this parameters is passed, the function will be executed at that step, and it will be an automated step. If no function is passed, the step will be considered a manual one. The description will be shown to the user and he will perform the step manually.
+
+If once the manual step has been performed, the tester has to verify something, the *isVerifyStep* parameter should be *True*. That will cause the "Step passes" and "Step fails" buttons to be active, instead of the simple "Next step" one.
+
+If you require some preparation routine to be executed before actually entering this step, pass the corresponding function using the ``prestep`` parameter.
+
+You can add a cleanup task to be performed when the test is finished (or skipped), by using the ``setCleanup()`` method  of the *Test* class and passing a function where the cleanup is to be performed.
+
+Tests can have associated issue URL, it is defined using the ``setIssueURL()`` method of the *Test* class, in case you are using a testing platform to keep track of test executions. If issue URL is defined user can open corresponding page from the test context menu in the test report dialog.
