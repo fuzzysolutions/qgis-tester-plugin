@@ -80,7 +80,9 @@ class TestSelector(BASE, WIDGET):
             self.testsTree.addTopLevelItem(groupItem)
             groupItem.setExpanded(True)
 
+        self.testsTree.itemChanged.connect(self.toggleRunButton)
         self.buttonBox.button(QDialogButtonBox.Ok).setText('Run selected tests')
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
         self.buttonBox.accepted.connect(self.okPressed)
         self.buttonBox.rejected.connect(self.cancelPressed)
 
@@ -154,12 +156,16 @@ class TestSelector(BASE, WIDGET):
         self.close()
 
     def okPressed(self):
+        self.close()
+
+    def toggleRunButton(self):
         self.tests = []
         iterator = QTreeWidgetItemIterator(self.testsTree)
         item = iterator.value()
         while item:
             if item.checkState(0) == Qt.Checked and item.childCount() == 0:
                 self.tests.append(item.test)
-            iterator +=1
+            iterator += 1
             item = iterator.value()
-        self.close()
+
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(len(self.tests) > 0)
