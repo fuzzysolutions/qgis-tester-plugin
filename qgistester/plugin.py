@@ -18,7 +18,6 @@ from qgistester.testerwidget import TesterWidget
 from qgistester.testselector import TestSelector
 from qgistester.settingswindow import SettingsWindow
 from qgistester.tests import addTestModule
-from qgistester.manualtests import manualtests
 
 pluginPath = os.path.dirname(__file__)
 
@@ -31,7 +30,11 @@ class TesterPlugin:
         self.widget = None
         self.iface.initializationCompleted.connect(self.hideWidget)
 
-        addTestModule(manualtests, 'Tester Plugin')
+        try:
+            from qgistester.manualtests import manualtests
+            addTestModule(manualtests, 'Tester Plugin')
+        except:
+            pass
 
     def initGui(self):
         self.action = QAction('Start testing', self.iface.mainWindow())
