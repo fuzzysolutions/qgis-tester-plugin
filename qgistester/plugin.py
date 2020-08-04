@@ -104,7 +104,7 @@ class TesterPlugin:
             self.test()
 
     def openHelp(self):
-        url = QUrl('file://{}'.format(os.path.join(pluginPath, 'docs',  'html', 'index.html')))
+        url = QUrl('file://{}'.format(os.path.join(pluginPath, 'docs', 'index.html')))
         QDesktopServices.openUrl(url)
 
     def about(self):
@@ -163,4 +163,3 @@ class TesterPlugin:
         dlg.setTitle('Plugin info')
         dlg.setMessage(html, QgsMessageOutput.MessageHtml)
         dlg.showMessage()
-

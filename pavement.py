@@ -78,12 +78,11 @@ def install(options):
         # Symlink the build folder to the parent
         docs = path('..') / '..' / "docs" / 'build' / 'html'
         docs_dest = path(__file__).dirname() / plugin_name / "docs"
-        docs_link = docs_dest / 'html'
+        docs_link = docs_dest
         if not docs_dest.exists():
             docs_dest.mkdir()
         if not docs_link.islink():
             docs.symlink(docs_link)
-
 
 @task
 def install_devtools():
