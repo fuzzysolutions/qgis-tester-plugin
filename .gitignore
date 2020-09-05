@@ -1,8 +1,11 @@
 __pycache__/
-docs/_build/
+docs/build/
+build_docs/
+lib/
 *.pyc
 *.*~
 *~
 *.diff
 *.log
 *.qm
+*.vscode
