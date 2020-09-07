@@ -257,6 +257,8 @@ def create_settings_docs(options):
     ('clean', 'c', 'clean out built artifacts first'),
     ('sphinx_theme=', 's', 'Sphinx theme to use in documentation'),
 ])
+
+
 def builddocs(options):
     try:
         # May fail if not in a git repo

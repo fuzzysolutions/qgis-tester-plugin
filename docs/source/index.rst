@@ -6,12 +6,7 @@
 QGIS Tester Plugin's documentation
 ==================================
 
-The QGIS Tester plugin is a tool to help to perform systematic testing
-QGIS Core or QGIS plugin's functionality. It allows creating automatic
-tests, that run without the tester intervention and semi-automated tests, where
-step by step instructions are presented to the tester to perform manual tasks, but
-possible to automate tasks that are performed automatically (e.g. load a specific
-project) to speed up the process.
+The QGIS Tester plugin is a tool to help test QGIS core and plugins' functionality. It allows for creating automatic and semi-automated tests. The first runs without the tester intervention. The second also includes step-by-step instructions to perform manual or verification tasks.
 
 Contents:
 
