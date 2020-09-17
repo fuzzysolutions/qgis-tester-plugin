@@ -8,6 +8,7 @@ env:
     - PLUGIN_NAME=qgistester
     - IMAGE=qgis/qgis
   matrix:
+    - QGIS_VERSION_TAG=master PYTHON_EXECUTABLE=python3 PIP_EXECUTABLE=pip3
     - QGIS_VERSION_TAG=release-3_10 PYTHON_EXECUTABLE=python3 PIP_EXECUTABLE=pip3
 
 language: python
