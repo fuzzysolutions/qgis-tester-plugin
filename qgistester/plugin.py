@@ -121,7 +121,11 @@ class TesterPlugin:
             self.test()
 
     def openHelp(self):
-        url = QUrl('file://{}'.format(os.path.join(pluginPath, 'docs', 'index.html')))
+        helpPath = os.path.join(pluginPath, 'docs', 'index.html')
+        if os.path.exists(helpPath):
+            url = QUrl('file://{}'.format(helpPath))
+        else:
+            url = QUrl('https://github.com/qcooperative/qgis-tester-plugin/blob/master/docs/source/usage.rst')
         QDesktopServices.openUrl(url)
 
     def about(self):
