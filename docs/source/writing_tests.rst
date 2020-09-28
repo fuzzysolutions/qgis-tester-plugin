@@ -34,7 +34,7 @@ Also to correctly de-register plugin's tests from the Tester plugin add followin
 Unit Tests
 **********
 
-Unit tests are created by wrapping a Python test suite. Create your test suite in the usual Python way and then return it from the ``unitTests()`` method.
+Unit tests are created by wrapping a Python test suite. Create your test suite in the usual Python way and then return it from the ``unitTests()`` method. For more information please refer to the Python documentation.
 
 The test description shown in the test selector dialog is taken from the test's ``shortDescription()`` method, which takes the first line of the docstring, so if you want to add a name to your test, just add a one-line dosctring to it. If no docstring is present, the test method name will be used.
 
