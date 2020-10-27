@@ -31,11 +31,12 @@ from unittest.runner import TextTestRunner
 
 class Step:
 
-    def __init__(self, description, function=None, prestep=None, isVerifyStep=False):
+    def __init__(self, description, function=None, prestep=None, isVerifyStep=False, busyCursor=True):
         self.description = description
         self.function = function
         self.prestep = prestep
         self.isVerifyStep = isVerifyStep
+        self.busyCursor = busyCursor
 
 
 class Test:

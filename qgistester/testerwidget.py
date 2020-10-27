@@ -137,7 +137,10 @@ class TesterWidget(BASE, WIDGET):
                 self.webView.setEnabled(False)
                 QCoreApplication.processEvents()
                 try:
-                    with OverrideCursor(Qt.WaitCursor):
+                    if step.busyCursor:
+                        with OverrideCursor(Qt.WaitCursor):
+                            step.function()
+                    else:
                         step.function()
                     QCoreApplication.processEvents()
                     self.testPasses()
@@ -155,7 +158,10 @@ class TesterWidget(BASE, WIDGET):
                 self.btnNextStep.setEnabled(False)
                 if step.prestep:
                     try:
-                        with OverrideCursor(Qt.WaitCursor):
+                        if step.busyCursor:
+                            with OverrideCursor(Qt.WaitCursor):
+                                step.prestep()
+                        else:
                             step.prestep()
                         QCoreApplication.processEvents()
                     except Exception as e:
@@ -173,7 +179,10 @@ class TesterWidget(BASE, WIDGET):
                 self.webView.setEnabled(False)
                 QCoreApplication.processEvents()
                 try:
-                    with OverrideCursor(Qt.WaitCursor):
+                    if step.busyCursor:
+                        with OverrideCursor(Qt.WaitCursor):
+                            step.function()
+                    else:
                         step.function()
                     QCoreApplication.processEvents()
                     self.currentTestStep += 1
@@ -197,7 +206,10 @@ class TesterWidget(BASE, WIDGET):
                     self.btnTestFailed.setEnabled(False)
                 if step.prestep:
                     try:
-                        with OverrideCursor(Qt.WaitCursor):
+                        if step.busyCursor:
+                            with OverrideCursor(Qt.WaitCursor):
+                                step.prestep()
+                        else:
                             step.prestep()
                         QCoreApplication.processEvents()
                     except Exception as e:
