@@ -27,7 +27,7 @@ import json
 from collections import defaultdict
 
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import Qt, QSettings
+from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtWidgets import (QTreeWidgetItem,
                                  QTreeWidgetItemIterator,
                                  QDialog,

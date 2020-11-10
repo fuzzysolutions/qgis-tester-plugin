@@ -29,7 +29,7 @@ import webbrowser
 from collections import defaultdict
 
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import Qt, QSettings, QFileInfo
+from qgis.PyQt.QtCore import Qt, QFileInfo
 from qgis.PyQt.QtWidgets import (QTreeWidgetItem,
                                  QMenu,
                                  QAction,
@@ -38,7 +38,7 @@ from qgis.PyQt.QtWidgets import (QTreeWidgetItem,
                                  QDialogButtonBox,
                                  QMessageBox)
 from qgis.PyQt.QtGui import QColor
-from qgis.core import QgsApplication
+from qgis.core import QgsApplication, QgsSettings
 
 WIDGET, BASE = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'reportdialog.ui'))
 
@@ -142,7 +142,7 @@ class ReportDialog(BASE, WIDGET):
             QMessageBox.warning(self, 'Save Results', 'No test item selected')
             return
 
-        settings = QSettings('Boundless', 'qgistester')
+        settings = QgsSettings('QCooperative', 'qgistester')
         lastDirectory = settings.value('lastDirectory', '.')
         fileName, _ = QFileDialog.getSaveFileName(self,
                                                   self.tr('Save file'),
