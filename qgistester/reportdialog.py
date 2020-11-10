@@ -139,7 +139,7 @@ class ReportDialog(BASE, WIDGET):
     def saveResults(self, saveAll=False):
         currentItem = self.resultsTree.currentItem()
         if not saveAll and not hasattr(currentItem, 'result'):
-            QMessageBox.warning(self, 'Save results', 'No test item selected')
+            QMessageBox.warning(self, 'Save Results', 'No test item selected')
             return
 
         settings = QSettings('Boundless', 'qgistester')

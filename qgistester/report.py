@@ -65,13 +65,13 @@ class TestResult:
     def __str__(self):
         s = 'Test name: {}-{}\nTest result:'.format(self.test.group, self.test.name)
         if self.status == self.SKIPPED:
-            s+= 'Test skipped'
+            s += 'Test skipped'
         elif self.status == self.PASSED:
-            s+= 'Test passed correctly'
+            s += 'Test passed correctly'
         elif self.status == self.CONTAINS_ERROR:
-            s+= 'Test contains an error at step "{}":\n{}'.format(self.errorStep, self.errorMessage)
+            s += 'Test contains an error at step "{}":\n{}'.format(self.errorStep, self.errorMessage)
         elif self.status == self.FAILED_AT_SETUP:
-            s+= 'Test step "{}" failed at setup:\n{}'.format(self.errorStep, self.errorMessage)
+            s += 'Test step "{}" failed at setup:\n{}'.format(self.errorStep, self.errorMessage)
         else:
-            s+= 'Test failed at step "{}" with message:\n{}'.format(self.errorStep, self.errorMessage)
+            s += 'Test failed at step "{}" with message:\n{}'.format(self.errorStep, self.errorMessage)
         return s

@@ -99,7 +99,7 @@
      <item>
       <widget class="QLabel" name="onlyLastFailuresLabel">
        <property name="text">
-        <string>&lt;a href='#'&gt;Last failed&lt;/a&gt;</string>
+        <string>&lt;a href='#'&gt;Last Failed&lt;/a&gt;</string>
        </property>
       </widget>
      </item>
@@ -122,7 +122,7 @@
      <item>
       <widget class="QPushButton" name="exportButton">
        <property name="text">
-        <string>Export tests list</string>
+        <string>Export Tests List</string>
        </property>
       </widget>
      </item>

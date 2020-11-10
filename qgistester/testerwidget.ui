@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tester plugin</string>
+   <string>Tester Plugin</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -24,7 +24,16 @@
        </sizepolicy>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -41,7 +50,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Current test</string>
+            <string>Current Test</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
@@ -67,21 +76,21 @@
          <item>
           <widget class="QPushButton" name="btnRestartTest">
            <property name="text">
-            <string>Restart test</string>
+            <string>Restart Test</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="btnSkip">
            <property name="text">
-            <string>Skip test</string>
+            <string>Skip Test</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="btnCancel">
            <property name="text">
-            <string>Cancel testing</string>
+            <string>Cancel Testing</string>
            </property>
           </widget>
          </item>
@@ -102,21 +111,21 @@
       <item row="2" column="1">
        <widget class="QPushButton" name="btnTestOk">
         <property name="text">
-         <string>Test passes</string>
+         <string>Test Passes</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="btnNextStep">
         <property name="text">
-         <string>Next step</string>
+         <string>Next Step</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
        <widget class="QPushButton" name="btnTestFailed">
         <property name="text">
-         <string>Test fails</string>
+         <string>Test Fails</string>
         </property>
        </widget>
       </item>

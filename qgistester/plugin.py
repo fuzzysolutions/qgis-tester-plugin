@@ -54,7 +54,7 @@ class TesterPlugin:
             pass
 
     def initGui(self):
-        self.action = QAction('Start testing', self.iface.mainWindow())
+        self.action = QAction('Start Testing', self.iface.mainWindow())
         self.action.setIcon(QIcon(os.path.join(pluginPath, 'plugin.svg')))
         self.action.setObjectName('testerStart')
         self.action.triggered.connect(self.test)
@@ -87,7 +87,7 @@ class TesterPlugin:
 
     def test(self):
         if self.widget is not None and self.widget.isVisible():
-            QMessageBox.warning(self.iface.mainWindow(), 'Tester plugin', 'A test cycle is currently being run')
+            QMessageBox.warning(self.iface.mainWindow(), 'Tester Plugin', 'A test cycle is currently being run')
             return
 
         dlg = TestSelector()
@@ -181,6 +181,6 @@ class TesterPlugin:
         html += '</body>'
 
         dlg = QgsMessageOutput.createMessageOutput()
-        dlg.setTitle('Plugin info')
+        dlg.setTitle('Plugin Info')
         dlg.setMessage(html, QgsMessageOutput.MessageHtml)
         dlg.showMessage()

@@ -102,7 +102,7 @@ class TesterWidget(BASE, WIDGET):
             self.report.addTestResult(self.currentTestResult)
         if self.currentTest < len(self.tests):
             test = self.tests[self.currentTest]
-            self.labelCurrentTest.setText('Current test: {}-{}'.format(test.group.upper(), test.name))
+            self.labelCurrentTest.setText('Current Test: {}-{}'.format(test.group.upper(), test.name))
             self.currentTestResult = TestResult(test)
             self.currentTestStep = 0
             self.runNextStep()
@@ -151,9 +151,9 @@ class TesterWidget(BASE, WIDGET):
                         self.testContainsError('{}\n{}'.format(str(e), traceback.format_exc()))
             else:
                 self.btnTestOk.setEnabled(True)
-                self.btnTestOk.setText('Test passes')
+                self.btnTestOk.setText('Test Passes')
                 self.btnTestFailed.setEnabled(True)
-                self.btnTestFailed.setText('Test fails')
+                self.btnTestFailed.setText('Test Fails')
                 self.webView.setEnabled(True)
                 self.btnNextStep.setEnabled(False)
                 if step.prestep:
@@ -198,9 +198,9 @@ class TesterWidget(BASE, WIDGET):
                 self.btnNextStep.setEnabled(not step.isVerifyStep)
                 if step.isVerifyStep:
                     self.btnTestOk.setEnabled(True)
-                    self.btnTestOk.setText('Step passes')
+                    self.btnTestOk.setText('Step Passes')
                     self.btnTestFailed.setEnabled(True)
-                    self.btnTestFailed.setText('Step fails')
+                    self.btnTestFailed.setText('Step Fails')
                 else:
                     self.btnTestOk.setEnabled(False)
                     self.btnTestFailed.setEnabled(False)
@@ -222,7 +222,7 @@ class TesterWidget(BASE, WIDGET):
 
     def testPasses(self):
         test = self.tests[self.currentTest]
-        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step passes':
+        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step Passes':
             self.runNextStep()
         else:
             try:
@@ -230,14 +230,14 @@ class TesterWidget(BASE, WIDGET):
                 test.cleanup()
                 self.currentTestResult.passed()
             except:
-                self.currentTestResult.failed('Test cleanup', traceback.format_exc())
+                self.currentTestResult.failed('Test Cleanup', traceback.format_exc())
 
             self.currentTest +=1
             self.runNextTest()
 
     def testFails(self, msg=''):
         test = self.tests[self.currentTest]
-        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step passes':
+        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step Passes':
             desc = test.steps[self.currentTestStep - 1].description
         else:
             desc = test.steps[self.currentTestStep].description
@@ -251,7 +251,7 @@ class TesterWidget(BASE, WIDGET):
 
     def testFailsAtSetup(self, msg=''):
         test = self.tests[self.currentTest]
-        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step passes':
+        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step Passes':
             desc = test.steps[self.currentTestStep - 1].description
         else:
             desc = test.steps[self.currentTestStep].description
@@ -265,7 +265,7 @@ class TesterWidget(BASE, WIDGET):
 
     def testContainsError(self, msg=''):
         test = self.tests[self.currentTest]
-        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step passes':
+        if self.btnTestOk.isEnabled() and self.btnTestOk.text() == 'Step Passes':
             desc = test.steps[self.currentTestStep - 1].description
         else:
             desc = test.steps[self.currentTestStep].description

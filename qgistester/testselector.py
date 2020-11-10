@@ -65,10 +65,10 @@ class TestSelector(BASE, WIDGET):
             groupItem.setText(0, group)
             groupItem.setFlags(groupItem.flags() | Qt.ItemIsTristate);
             unitItem = QTreeWidgetItem()
-            unitItem.setText(0, 'Fully automated tests')
+            unitItem.setText(0, 'Fully Automated Tests')
             unitItem.setFlags(unitItem.flags() | Qt.ItemIsTristate);
             manualItem = QTreeWidgetItem()
-            manualItem.setText(0, 'Manual and semi-automated tests')
+            manualItem.setText(0, 'Manual and Semi-Automated Tests')
             manualItem.setFlags(manualItem.flags() | Qt.ItemIsTristate);
             unitTestsByCategories = defaultdict(list)
             manualTestsByCategories = defaultdict(list)
@@ -98,7 +98,7 @@ class TestSelector(BASE, WIDGET):
             groupItem.setExpanded(True)
 
         self.testsTree.itemChanged.connect(self.toggleRunButton)
-        self.buttonBox.button(QDialogButtonBox.Ok).setText('Run selected tests')
+        self.buttonBox.button(QDialogButtonBox.Ok).setText('Run Selected Tests')
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
         self.buttonBox.accepted.connect(self.okPressed)
         self.buttonBox.rejected.connect(self.cancelPressed)
