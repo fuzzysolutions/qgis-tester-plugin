@@ -4,7 +4,7 @@
 Usage
 =====
 
-This section explains how to execute tests using the tester plugin.
+This section explains how to execute tests using the Tester plugin.
 
 
 Running tests
@@ -14,7 +14,7 @@ To start a test cycle, select the :menuselection:`Plugins --> Tester --> Start t
 
 The :guilabel:`Test selector` window will be shown with the available tests grouped by plugin and categories.
 
-.. image:: testselector.png
+.. image:: test-selector.png
 	:align: center
 
 The list of available tests depends on the active plugins. The Tester plugin itself contains no tests, except for a few metatests. Other tests are added by plugins when they are loaded.
@@ -27,7 +27,7 @@ Select the tests that you want to be executed and then click :guilabel:`Run sele
 
 In the upper part of the QGIS map canvas, you will see the guilabel:`Tester plugin` panel.
 
-.. image:: testpanel_upload_dragdrop.png
+.. image:: tester-plugin-panel.png
 	:align: center
 
 It has a single panel with a description of the current step in the current test. If the step is automated (that is, if no user interaction is expected during this step), the panel is disabled. Otherwise, the panel will show a description of the task that the test expects you to perform.
@@ -94,12 +94,12 @@ Test report
 
 Once all the selected tests have been run (or skipped), the test panel is hidden and a test results dialog is shown.
 
-.. image:: testresults.png
+.. image:: test-results.png
 	:align: center
 
 For those tests that have not passed correctly (displayed in red), you can click on their names and a detailed error trace will be shown in the lower panel
 
-.. image:: testresulttrace.png
+.. image:: result-details.png
 	:align: center
 
 Right-clicking on the test name in the list will open a context menu with a single menu entry: "Open issue page". Select it to open the corresponding issue page for the test, in case it has been defined. If no issue page has been defined for that test, the context menu will not be shown.
