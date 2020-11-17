@@ -3,7 +3,7 @@ name=Tester
 description=Run automated, manual and semi-automated tests within QGIS
 about=The Tester plugin is a tool to help test QGIS core and plugins' functionality. It allows to run automatic and semi-automated tests. The first runs without the tester intervention. The second also includes step-by-step instructions to perform manual or verification tasks.
 category=Plugins
-version=0.2
+version=0.3
 qgisMinimumVersion=3.0
 
 author=QCooperative, Victor Olaya (Boundless)
