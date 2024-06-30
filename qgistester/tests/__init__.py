@@ -75,7 +75,10 @@ def _testsFromModule(module, category='General'):
     modtests = []
     if 'functionalTests' in dir(module):
         modtests.extend(module.functionalTests())
-    if 'unitTests' in dir(module):
+
+    if 'unitTestsWithCategories' in dir(module):
+        modtests.extend([UnitTestWrapper(unit, cat) for unit, cat in module.unitTestsWithCategories()])
+    elif 'unitTests' in dir(module):
         modtests.extend([UnitTestWrapper(unit, category) for unit in module.unitTests()])
     if 'settings' in dir(module):
         for test in modtests:
